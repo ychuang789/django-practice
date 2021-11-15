@@ -10,7 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from configparser import ConfigParser
 from pathlib import Path
+
+# read configuration file
+config = ConfigParser()
+config.read('default.ini')
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +37,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,10 +81,24 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
+db_info = config['DatabaseInfo']
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': db_info['ENGINE'],
+        'NAME': db_info['NAME'],
+        'USER': db_info['USER'],
+        'PASSWORD': db_info['PASSWORD'],
+        'HOST': db_info['HOST'],
+        'PORT': db_info['PORT'],
     }
 }
 
@@ -104,15 +125,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+lan_time_info = config['LanguageAndTime']
 
-TIME_ZONE = 'Asia/Taipei'
+LANGUAGE_CODE = lan_time_info['LANGUAGE_CODE']
 
-USE_I18N = True
+TIME_ZONE = lan_time_info['TIME_ZONE']
 
-USE_L10N = True
+USE_I18N = bool(lan_time_info['USE_I18N'])
 
-USE_TZ = True
+USE_L10N = bool(lan_time_info['USE_L10N'])
+
+USE_TZ = bool(lan_time_info['USE_TZ'])
 
 
 # Static files (CSS, JavaScript, Images)

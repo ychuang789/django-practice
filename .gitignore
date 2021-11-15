@@ -141,7 +141,8 @@ save.db
 # excel
 *.xlsx
 
-
 # all logs
 /logs
 
+# development secrets info
+default.ini
